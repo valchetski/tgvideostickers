@@ -1,5 +1,6 @@
 using Telegram.Bot;
 using Telegram.Bot.Polling;
+using Tgvs;
 using Tgvs.Telegram;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddHttpClient("telegram_bot_client")
         return new TelegramBotClient(options, httpClient);
     });
 builder.Services
+    .AddSingleton<IStickersProvider>(new FileStickersProvider(builder.Configuration.GetValue<string>("StickersFile")))
     .AddHostedService<PollingService>()
     .AddSingleton<IReceiverService, ReceiverService>()
     .AddSingleton<IUpdateHandler, UpdateHandler>();

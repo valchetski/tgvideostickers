@@ -7,7 +7,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Tgvs.Telegram;
 
-public class UpdateHandler(ITelegramBotClient botClient, ILogger<UpdateHandler> logger)
+public class UpdateHandler(ITelegramBotClient botClient, IStickersProvider stickersProvider, ILogger<UpdateHandler> logger)
     : IUpdateHandler
 {
     public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cancellationToken)
@@ -34,6 +34,12 @@ public class UpdateHandler(ITelegramBotClient botClient, ILogger<UpdateHandler> 
     private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
     {
         logger.LogInformation("Receive message type: {MessageType}", message.Type);
+
+        if (message.Video != null)
+        {
+            logger.LogInformation("Received video with FileID: {VideoFileID}", message.Video.FileId);
+        }
+
         if (message.Text is not { } messageText)
             return;
 
@@ -76,13 +82,10 @@ public class UpdateHandler(ITelegramBotClient botClient, ILogger<UpdateHandler> 
     {
         logger.LogInformation("Received inline query from: {InlineQueryFromId}", inlineQuery.From.Id);
 
-        InlineQueryResult[] results = {
-            // displayed result
-            new InlineQueryResultArticle(
-                id: "1",
-                title: "TgBots",
-                inputMessageContent: new InputTextMessageContent("hello"))
-        };
+        InlineQueryResult[] results = stickersProvider
+            .GetStickers()
+            .Select(x => new InlineQueryResultCachedVideo(x.Id, x.VideoFileId, x.Title))
+            .ToArray();
 
         await botClient.AnswerInlineQueryAsync(
             inlineQueryId: inlineQuery.Id,
