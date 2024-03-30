@@ -1,9 +1,14 @@
-﻿namespace Tgvs.Telegram;
+﻿using Telegram.Bot;
 
-public class PollingService(IReceiverService receiverService) : IHostedService
+namespace Tgvs.Telegram;
+
+public class PollingService(
+    IReceiverService receiverService,
+    ITelegramBotClient botClient) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        botClient.DeleteWebhookAsync(false, cancellationToken);
         receiverService.Receive(cancellationToken);
         return Task.CompletedTask;
     }

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Tgvs;
@@ -5,20 +6,41 @@ using Tgvs.Telegram;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson();
+    
+builder.Services.AddHttpLogging(o => { });
+
+var telegramSection = builder.Configuration.GetSection("Telegram");
+builder.Services.Configure<TelegramBotConfig>(telegramSection);
 builder.Services.AddHttpClient("telegram_bot_client")
     .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
     {
-        TelegramBotClientOptions options = new(builder.Configuration.GetValue<string>("TelegramBotToken"));
+        var telegramConfig = sp.GetRequiredService<IOptions<TelegramBotConfig>>().Value;
+        TelegramBotClientOptions options = new(telegramConfig.Token);
         return new TelegramBotClient(options, httpClient);
     });
 builder.Services
     .AddSingleton<IStickersProvider>(new FileStickersProvider(builder.Configuration.GetValue<string>("StickersFile")))
-    .AddHostedService<PollingService>()
     .AddSingleton<IReceiverService, ReceiverService>()
     .AddSingleton<IUpdateHandler, UpdateHandler>();
 
+if (telegramSection.GetValue<bool>("UseWebhook"))
+{
+    builder.Services.AddHostedService<ConfigureWebhook>();
+}
+else
+{
+    builder.Services.AddHostedService<PollingService>();
+}
+
 var app = builder.Build();
 
+app.UseHttpLogging();
+
 app.MapGet("/", () => "Hello World!");
+
+app.MapControllers();
 
 app.Run();
