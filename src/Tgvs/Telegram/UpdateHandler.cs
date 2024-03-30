@@ -37,7 +37,8 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersProvider stick
 
         if (message.Video != null)
         {
-            logger.LogInformation("Received video with FileID: {VideoFileID}", message.Video.FileId);
+            await TextInput(message, message.Video.FileId, cancellationToken);
+            return;
         }
 
         if (message.Text is not { } messageText)
@@ -45,15 +46,15 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersProvider stick
 
         var action = messageText.Split(' ')[0] switch
         {
-            _ => TextInput(message, cancellationToken)
+            _ => TextInput(message, "Hello", cancellationToken)
         };
         await action;
         
-        Task<Message> TextInput(Message message, CancellationToken cancellationToken)
+        Task<Message> TextInput(Message message, string text, CancellationToken cancellationToken)
         {
             return botClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: "Hello",
+                text: text,
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken);
 

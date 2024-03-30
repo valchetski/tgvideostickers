@@ -6,11 +6,10 @@ public class PollingService(
     IReceiverService receiverService,
     ITelegramBotClient botClient) : IHostedService
 {
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        botClient.DeleteWebhookAsync(false, cancellationToken);
+        await botClient.DeleteWebhookAsync(false, cancellationToken);
         receiverService.Receive(cancellationToken);
-        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
