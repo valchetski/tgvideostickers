@@ -2,5 +2,5 @@
 
 public interface IStickersProvider
 {
-    public Sticker[] GetStickers();
+    public Sticker[] GetStickers(string name);
 }

@@ -84,7 +84,7 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersProvider stick
         logger.LogInformation("Received inline query from: {InlineQueryFromId}", inlineQuery.From.Id);
 
         InlineQueryResult[] results = stickersProvider
-            .GetStickers()
+            .GetStickers(inlineQuery.Query)
             .Select(x => new InlineQueryResultCachedVideo(x.Id, x.VideoFileId, x.Title))
             .ToArray();
 
