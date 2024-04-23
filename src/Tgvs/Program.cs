@@ -10,7 +10,10 @@ builder.Services
     .AddControllers()
     .AddNewtonsoftJson();
     
-builder.Services.AddHttpLogging(o => { });
+builder.Services
+    .AddHttpLogging(o => { })
+    .AddMemoryCache()
+    .AddApplicationInsightsTelemetry();
 
 var telegramSection = builder.Configuration.GetSection("Telegram");
 builder.Services.Configure<TelegramBotConfig>(telegramSection);
@@ -21,8 +24,8 @@ builder.Services.AddHttpClient("telegram_bot_client")
         TelegramBotClientOptions options = new(telegramConfig.Token);
         return new TelegramBotClient(options, httpClient);
     });
-builder.Services
-    .AddMemoryCache()
+
+builder.Services    
     .AddStickersProviders(builder.Configuration)
     .AddSingleton<IStickersService, StickersService>()
     .AddSingleton<IReceiverService, ReceiverService>()
