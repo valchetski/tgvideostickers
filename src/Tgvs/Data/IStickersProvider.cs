@@ -2,5 +2,5 @@
 
 public interface IStickersProvider
 {
-    public Sticker[] GetStickers(string name);
+    public Task<Sticker[]?> GetStickersAsync();
 }

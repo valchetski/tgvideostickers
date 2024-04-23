@@ -22,7 +22,9 @@ builder.Services.AddHttpClient("telegram_bot_client")
         return new TelegramBotClient(options, httpClient);
     });
 builder.Services
-    .AddSingleton<IStickersProvider>(new FileStickersProvider(builder.Configuration.GetValue<string>("StickersFile")))
+    .AddMemoryCache()
+    .AddStickersProviders(builder.Configuration)
+    .AddSingleton<IStickersService, StickersService>()
     .AddSingleton<IReceiverService, ReceiverService>()
     .AddSingleton<IUpdateHandler, UpdateHandler>();
 

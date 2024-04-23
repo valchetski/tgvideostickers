@@ -4,14 +4,8 @@ namespace Tgvs;
 
 public class FileStickersProvider(string fileName) : IStickersProvider
 {
-    public Sticker[] GetStickers(string name)
+    public Task<Sticker[]?> GetStickersAsync()
     {
-        var stickers = JsonSerializer.Deserialize<Sticker[]>(File.ReadAllText(fileName));
-        if (string.IsNullOrEmpty(name))
-        {
-            return stickers;
-        }
-
-        return stickers.Where(x => x.Title.Contains(name, StringComparison.OrdinalIgnoreCase)).ToArray();
+        return Task.FromResult(JsonSerializer.Deserialize<Sticker[]>(File.ReadAllText(fileName)));
     }
 }

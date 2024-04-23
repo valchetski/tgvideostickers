@@ -7,7 +7,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Tgvs.Telegram;
 
-public class UpdateHandler(ITelegramBotClient botClient, IStickersProvider stickersProvider, ILogger<UpdateHandler> logger)
+public class UpdateHandler(ITelegramBotClient botClient, IStickersService stickersService, ILogger<UpdateHandler> logger)
     : IUpdateHandler
 {
     public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cancellationToken)
@@ -83,8 +83,8 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersProvider stick
     {
         logger.LogInformation("Received inline query from: {InlineQueryFromId}", inlineQuery.From.Id);
 
-        InlineQueryResult[] results = stickersProvider
-            .GetStickers(inlineQuery.Query)
+        var stickers = await stickersService.GetStickersAsync(inlineQuery.Query);
+        InlineQueryResult[] results = stickers
             .Select(x => new InlineQueryResultCachedVideo(x.Id, x.VideoFileId, x.Title))
             .ToArray();
 
