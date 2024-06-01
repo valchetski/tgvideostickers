@@ -27,11 +27,13 @@ public class MockTelegramBotClient : ITelegramBotClient
 
     public Task<TResponse> MakeRequestAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
-        OnMakingApiRequest?.Invoke(this, new ApiRequestEventArgs(request), cancellationToken);
+        var requestArgs = new ApiRequestEventArgs(request);
+        OnMakingApiRequest?.Invoke(this, requestArgs, cancellationToken);
         if (request is AnswerInlineQueryRequest answerInlineQueryRequest)
         {
             AnswerInlineQueryRequests.Add(answerInlineQueryRequest);
         }
+        OnApiResponseReceived?.Invoke(this, new ApiResponseEventArgs(new HttpResponseMessage(), requestArgs), cancellationToken);
         return Task.FromResult(Activator.CreateInstance<TResponse>());
     }
 
