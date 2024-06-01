@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -26,10 +27,10 @@ builder.Services.AddHttpClient("telegram_bot_client")
     });
 
 builder.Services    
-    .AddStickersProviders(builder.Configuration)
-    .AddSingleton<IStickersService, StickersService>()
-    .AddSingleton<IReceiverService, ReceiverService>()
-    .AddSingleton<IUpdateHandler, UpdateHandler>();
+    .AddCachedStickersProvider(builder.Configuration)
+    .AddScoped<IStickersService, StickersService>()
+    .AddScoped<IReceiverService, ReceiverService>()
+    .AddScoped<IUpdateHandler, UpdateHandler>();
 
 if (telegramSection.GetValue<bool>("UseWebhook"))
 {
@@ -47,5 +48,11 @@ app.UseHttpLogging();
 app.MapGet("/", () => "Hello World!");
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<StickersDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

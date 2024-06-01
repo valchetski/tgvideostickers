@@ -4,21 +4,14 @@ using Telegram.Bot.Types.Enums;
 
 namespace Tgvs;
 
-public class ConfigureWebhook : IHostedService
+public class ConfigureWebhook(
+    ILogger<ConfigureWebhook> logger,
+    IServiceProvider serviceProvider,
+    IOptions<TelegramBotConfig> botOptions) : IHostedService
 {
-    private readonly ILogger<ConfigureWebhook> _logger;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly TelegramBotConfig _botConfig;
-
-    public ConfigureWebhook(
-        ILogger<ConfigureWebhook> logger,
-        IServiceProvider serviceProvider,
-        IOptions<TelegramBotConfig> botOptions)
-    {
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-        _botConfig = botOptions.Value;
-    }
+    private readonly ILogger<ConfigureWebhook> _logger = logger;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly TelegramBotConfig _botConfig = botOptions.Value;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {

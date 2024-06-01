@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47192566-E9D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgvs", "src\Tgvs\Tgvs.csproj", "{E20B2C0A-0819-43A1-B284-11E96BFAEE93}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{48429193-E569-49D4-A4C4-E2875B624D95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgvs.Tests.Integration", "tests\Tgvs.Tests.Integration\Tgvs.Tests.Integration.csproj", "{6C348267-7EAD-4338-85DA-E7C0BADE2A52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,11 +21,16 @@ Global
 		{E20B2C0A-0819-43A1-B284-11E96BFAEE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E20B2C0A-0819-43A1-B284-11E96BFAEE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E20B2C0A-0819-43A1-B284-11E96BFAEE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C348267-7EAD-4338-85DA-E7C0BADE2A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C348267-7EAD-4338-85DA-E7C0BADE2A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C348267-7EAD-4338-85DA-E7C0BADE2A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C348267-7EAD-4338-85DA-E7C0BADE2A52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E20B2C0A-0819-43A1-B284-11E96BFAEE93} = {47192566-E9D8-4537-9875-3014C95BC628}
+		{6C348267-7EAD-4338-85DA-E7C0BADE2A52} = {48429193-E569-49D4-A4C4-E2875B624D95}
 	EndGlobalSection
 EndGlobal
