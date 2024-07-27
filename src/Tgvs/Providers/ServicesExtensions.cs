@@ -12,7 +12,8 @@ public static class ServicesExtensions
         {
             return services
                 .AddDbContext<StickersDbContext>(options => options
-                    .UseSqlServer(stickersConnectionString))
+                    .UseSqlServer(stickersConnectionString, builder => 
+                        builder.EnableRetryOnFailure()))
                 .AddCachedStickersProvider(sp => 
                     new SqlStickersProvider(sp.GetRequiredService<StickersDbContext>()));
         }
