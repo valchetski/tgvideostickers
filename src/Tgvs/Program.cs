@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -48,11 +47,5 @@ app.UseHttpLogging();
 app.MapGet("/", () => "Hello World!");
 
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<StickersDbContext>();
-    db.Database.Migrate();
-}
 
 app.Run();

@@ -1,0 +1,36 @@
+name: db-migration
+
+env:
+  DOTNET_VERSION: '8.*'                 # set this to the .NET Core version to use
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dotnet-ef
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Create migrations bundle
+        run: dotnet ef migrations bundle -p src/Tgvs --output efbundle.exe
+
+      - name: Upload artifact with migration bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: efbundle
+          path: efbundle.exe
+
+
