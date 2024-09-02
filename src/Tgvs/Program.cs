@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Tgvs;
@@ -14,6 +15,9 @@ builder.Services
     .AddHttpLogging(o => { })
     .AddMemoryCache()
     .AddApplicationInsightsTelemetry();
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .ReadFrom.Configuration(ctx.Configuration));
 
 var telegramSection = builder.Configuration.GetSection("Telegram");
 builder.Services.Configure<TelegramBotConfig>(telegramSection);
