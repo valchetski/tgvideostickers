@@ -1,0 +1,16 @@
+name: tg-set-webhook
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Set Telegram Webhook
+      uses: indiesdev/curl@v1.1
+      with:
+        url: "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/setWebhook?url=${{ secrets.TG_WEBHOOK }}"
+    
