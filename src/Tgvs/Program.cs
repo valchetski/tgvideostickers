@@ -13,8 +13,7 @@ builder.Services
     
 builder.Services
     .AddHttpLogging(o => { })
-    .AddMemoryCache()
-    .AddApplicationInsightsTelemetry();
+    .AddMemoryCache();
 
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
