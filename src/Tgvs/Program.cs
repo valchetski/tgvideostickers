@@ -34,11 +34,7 @@ builder.Services
     .AddScoped<IReceiverService, ReceiverService>()
     .AddScoped<IUpdateHandler, UpdateHandler>();
 
-if (telegramSection.GetValue<bool>("UseWebhook"))
-{
-    builder.Services.AddHostedService<ConfigureWebhook>();
-}
-else
+if (!telegramSection.GetValue<bool>("UseWebhook"))
 {
     builder.Services.AddHostedService<PollingService>();
 }
