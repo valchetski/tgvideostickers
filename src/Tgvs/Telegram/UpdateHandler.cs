@@ -91,8 +91,6 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
         await botClient.AnswerInlineQueryAsync(
             inlineQueryId: inlineQuery.Id,
             results: results,
-            cacheTime: 0,
-            isPersonal: true,
             cancellationToken: cancellationToken);
     }
 
