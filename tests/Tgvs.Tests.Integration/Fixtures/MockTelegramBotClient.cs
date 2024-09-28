@@ -4,11 +4,11 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Requests;
 using Telegram.Bot.Requests.Abstractions;
 
-namespace Tgvs.Tests.Integration;
+namespace Tgvs.Tests.Integration.Fixtures;
 
 public class MockTelegramBotClient : ITelegramBotClient
 {
-    public List<AnswerInlineQueryRequest> AnswerInlineQueryRequests { get; set; } = new List<AnswerInlineQueryRequest>();
+    public List<AnswerInlineQueryRequest> AnswerInlineQueryRequests { get; set; } = [];
 
     public bool LocalBotServer => throw new NotImplementedException();
 

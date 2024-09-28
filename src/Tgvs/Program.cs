@@ -3,6 +3,7 @@ using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Tgvs;
+using Tgvs.Providers;
 using Tgvs.Telegram;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ builder.Services
     
 builder.Services
     .AddHttpLogging(o => { })
-    .AddMemoryCache();
+    .AddDistributedMemoryCache();
 
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));

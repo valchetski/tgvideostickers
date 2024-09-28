@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 
-namespace Tgvs;
+namespace Tgvs.Providers;
 
 public class SqlStickersProvider(StickersDbContext stickersContext) : IStickersProvider
 {

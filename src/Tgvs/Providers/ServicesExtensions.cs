@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 
-namespace Tgvs;
+namespace Tgvs.Providers;
 
 public static class ServicesExtensions
 {
@@ -12,9 +12,9 @@ public static class ServicesExtensions
         {
             return services
                 .AddDbContext<StickersDbContext>(options => options
-                    .UseSqlServer(stickersConnectionString, builder => 
+                    .UseSqlServer(stickersConnectionString, builder =>
                         builder.EnableRetryOnFailure()))
-                .AddCachedStickersProvider(sp => 
+                .AddCachedStickersProvider(sp =>
                     new SqlStickersProvider(sp.GetRequiredService<StickersDbContext>()));
         }
         else
@@ -36,15 +36,15 @@ public static class ServicesExtensions
         this IServiceCollection services,
         Func<IServiceProvider, TProvider> getProvider) where TProvider : IStickersProvider
     {
-        return services.AddScoped<IStickersProvider>(sp => 
-            new CachedStickersProvider(getProvider(sp), sp.GetRequiredService<IMemoryCache>()));
+        return services.AddScoped<IStickersProvider>(sp =>
+            new CachedStickersProvider(getProvider(sp), sp.GetRequiredService<IDistributedCache>()));
     }
 
     private static IServiceCollection AddCachedStickersProvider(
         this IServiceCollection services,
         IStickersProvider provider)
     {
-        return services.AddSingleton<IStickersProvider>(sp => 
-            new CachedStickersProvider(provider, sp.GetRequiredService<IMemoryCache>()));
+        return services.AddSingleton<IStickersProvider>(sp =>
+            new CachedStickersProvider(provider, sp.GetRequiredService<IDistributedCache>()));
     }
 }
