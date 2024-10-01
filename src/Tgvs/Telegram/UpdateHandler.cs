@@ -85,10 +85,14 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
         logger.LogInformation("Received inline query from: {InlineQueryFromId}", inlineQuery.From.Id);
 
         var stickers = await stickersService.GetStickersAsync(inlineQuery.Query);
-        InlineQueryResult[] results = stickers
-            .Select(x => new InlineQueryResultCachedVideo(x.Id, x.VideoFileId, x.Title))
-            .ToArray();
-
+        InlineQueryResult[] results = [];
+        if (stickers != null)
+        {
+            results = stickers
+                .Select(x => new InlineQueryResultCachedVideo(x.Id, x.VideoFileId, x.Title))
+                .ToArray();
+        }
+            
         await botClient.AnswerInlineQueryAsync(
             inlineQueryId: inlineQuery.Id,
             results: results,
