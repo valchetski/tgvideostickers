@@ -2,20 +2,19 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
-using Tgvs;
+using Tgvs.Cache;
 using Tgvs.Providers;
+using Tgvs.Services;
 using Tgvs.Telegram;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddHttpLogging(o => { })
+    .AddTgvsSqliteCache()
     .AddControllers()
     .AddNewtonsoftJson();
     
-builder.Services
-    .AddHttpLogging(o => { })
-    .AddDistributedMemoryCache();
-
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
 

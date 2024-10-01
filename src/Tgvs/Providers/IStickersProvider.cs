@@ -1,4 +1,4 @@
-﻿namespace Tgvs;
+﻿namespace Tgvs.Providers;
 
 public interface IStickersProvider
 {

@@ -1,4 +1,6 @@
-﻿namespace Tgvs;
+﻿using Tgvs.Providers;
+
+namespace Tgvs.Services;
 
 public class StickersService(IStickersProvider stickersProvider) : IStickersService
 {

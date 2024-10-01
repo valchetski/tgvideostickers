@@ -10,6 +10,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InlineQueryResults;
 using Testcontainers.MsSql;
+using Tgvs.Data;
 using Tgvs.Tests.Integration.Fixtures;
 
 namespace Tgvs.Tests.Integration.Controllers;

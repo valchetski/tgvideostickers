@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Tgvs.Data;
 
 namespace Tgvs.Providers;
 

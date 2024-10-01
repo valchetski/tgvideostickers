@@ -1,10 +1,10 @@
-﻿namespace Tgvs;
+﻿namespace Tgvs.Providers;
 
 public class Sticker
 {
-    public string Id {get; set; }
+    public required string Id { get; set; }
 
-    public string VideoFileId { get; set; }
+    public required string VideoFileId { get; set; }
 
-    public string Title { get; set; }
+    public required string Title { get; set; }
 }

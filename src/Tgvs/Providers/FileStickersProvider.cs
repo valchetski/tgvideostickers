@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Tgvs;
+namespace Tgvs.Providers;
 
 public class FileStickersProvider(string fileName) : IStickersProvider
 {

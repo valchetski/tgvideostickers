@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Tgvs;
+namespace Tgvs.Data;
 
 public class StickersDbContext(DbContextOptions<StickersDbContext> options) : DbContext(options)
 {
-    public DbSet<StickerEntity> Stickers{ get; set; }
+    public DbSet<StickerEntity> Stickers { get; set; }
 }

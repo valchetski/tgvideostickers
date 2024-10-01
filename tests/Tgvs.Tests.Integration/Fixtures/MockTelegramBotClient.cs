@@ -25,16 +25,25 @@ public class MockTelegramBotClient : ITelegramBotClient
         throw new NotImplementedException();
     }
 
-    public Task<TResponse> MakeRequestAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+    public async Task<TResponse> MakeRequestAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
         var requestArgs = new ApiRequestEventArgs(request);
-        OnMakingApiRequest?.Invoke(this, requestArgs, cancellationToken);
+
+        if (OnMakingApiRequest != null)
+        {
+            await OnMakingApiRequest.Invoke(this, requestArgs, cancellationToken);
+        }
+
         if (request is AnswerInlineQueryRequest answerInlineQueryRequest)
         {
             AnswerInlineQueryRequests.Add(answerInlineQueryRequest);
         }
-        OnApiResponseReceived?.Invoke(this, new ApiResponseEventArgs(new HttpResponseMessage(), requestArgs), cancellationToken);
-        return Task.FromResult(Activator.CreateInstance<TResponse>());
+
+        if (OnApiResponseReceived != null)
+        {
+            await OnApiResponseReceived.Invoke(this, new ApiResponseEventArgs(new HttpResponseMessage(), requestArgs), cancellationToken);
+        }
+        return Activator.CreateInstance<TResponse>();
     }
 
     public Task<bool> TestApiAsync(CancellationToken cancellationToken = default)
