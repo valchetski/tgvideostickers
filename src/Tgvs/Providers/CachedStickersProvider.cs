@@ -1,17 +1,18 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Tgvs.Providers;
 
-public class CachedStickersProvider(IStickersProvider originalProvider, IDistributedCache cache)
+public class CachedStickersProvider(
+    IStickersProvider originalProvider,
+    IDistributedCache cache,
+    IOptions<DistributedCacheEntryOptions> options)
      : IStickersProvider
 {
     private readonly IStickersProvider _originalProvider = originalProvider;
     private readonly IDistributedCache _cache = cache;
-    private readonly DistributedCacheEntryOptions _options = new()
-    {
-        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
-    };
+    private readonly DistributedCacheEntryOptions _options = options.Value;
 
     public async Task<Sticker[]?> GetStickersAsync()
     {

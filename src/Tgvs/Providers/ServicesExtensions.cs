@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Tgvs.Data;
 
 namespace Tgvs.Providers;
@@ -38,7 +39,10 @@ public static class ServicesExtensions
         Func<IServiceProvider, TProvider> getProvider) where TProvider : IStickersProvider
     {
         return services.AddScoped<IStickersProvider>(sp =>
-            new CachedStickersProvider(getProvider(sp), sp.GetRequiredService<IDistributedCache>()));
+            new CachedStickersProvider(
+                getProvider(sp),
+                sp.GetRequiredService<IDistributedCache>(),
+                sp.GetRequiredService<IOptions<DistributedCacheEntryOptions>>()));
     }
 
     private static IServiceCollection AddCachedStickersProvider(
@@ -46,6 +50,9 @@ public static class ServicesExtensions
         IStickersProvider provider)
     {
         return services.AddSingleton<IStickersProvider>(sp =>
-            new CachedStickersProvider(provider, sp.GetRequiredService<IDistributedCache>()));
+            new CachedStickersProvider(
+                provider,
+                sp.GetRequiredService<IDistributedCache>(),
+                sp.GetRequiredService<IOptions<DistributedCacheEntryOptions>>()));
     }
 }
