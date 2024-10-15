@@ -87,7 +87,7 @@ namespace Tgvs.Cache
                     var stickersDbContext = scope.ServiceProvider.GetRequiredService<StickersDbContext>();
                     
                     // while cache is unexpired we try to warm up database
-                    stickersDbContext.Stickers.FirstOrDefault();
+                    stickersDbContext.Stickers.FirstOrDefault(x => x.Id > 0);
                 });
             }
         }
