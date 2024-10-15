@@ -26,8 +26,6 @@ public class BotControllerTests
         var sqlConnectionString = container.GetConnectionString();
         Environment.SetEnvironmentVariable("ConnectionStrings__Stickers", sqlConnectionString);
 
-        Environment.SetEnvironmentVariable("Telegram__UseWebhook", "true");
-
         var mockTelegramBotClient = new MockTelegramBotClient();
         var factory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(x => x
