@@ -5,11 +5,16 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47192566-E9D8-4537-9875-3014C95BC628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgvs", "src\Tgvs\Tgvs.csproj", "{E20B2C0A-0819-43A1-B284-11E96BFAEE93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgvs", "src\Tgvs\Tgvs.csproj", "{E20B2C0A-0819-43A1-B284-11E96BFAEE93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{48429193-E569-49D4-A4C4-E2875B624D95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgvs.Tests.Integration", "tests\Tgvs.Tests.Integration\Tgvs.Tests.Integration.csproj", "{6C348267-7EAD-4338-85DA-E7C0BADE2A52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgvs.Tests.Integration", "tests\Tgvs.Tests.Integration\Tgvs.Tests.Integration.csproj", "{6C348267-7EAD-4338-85DA-E7C0BADE2A52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{A4F5E897-67E8-4A0F-A806-1A7C8E15A3CD}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,5 +37,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E20B2C0A-0819-43A1-B284-11E96BFAEE93} = {47192566-E9D8-4537-9875-3014C95BC628}
 		{6C348267-7EAD-4338-85DA-E7C0BADE2A52} = {48429193-E569-49D4-A4C4-E2875B624D95}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {689B5784-FB81-4AC6-B042-90745DEDC7E2}
 	EndGlobalSection
 EndGlobal

@@ -117,7 +117,7 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
         return Task.CompletedTask;
     }
 
-    public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, HandleErrorSource source, CancellationToken cancellationToken)
     {
         var ErrorMessage = exception switch
         {

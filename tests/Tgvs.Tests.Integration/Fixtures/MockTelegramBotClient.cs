@@ -12,7 +12,7 @@ public class MockTelegramBotClient : ITelegramBotClient
 
     public bool LocalBotServer => throw new NotImplementedException();
 
-    public long? BotId => throw new NotImplementedException();
+    public long BotId => throw new NotImplementedException();
 
     public TimeSpan Timeout { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     public IExceptionParser ExceptionsParser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
