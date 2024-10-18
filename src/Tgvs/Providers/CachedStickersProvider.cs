@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Tgvs.Providers;
 
@@ -21,11 +21,11 @@ public class CachedStickersProvider(
         if (cachedStickers == null)
         {
             stickers = await _originalProvider.GetStickersAsync();
-            await _cache.SetStringAsync("Stickers", JsonConvert.SerializeObject(stickers), _options);
+            await _cache.SetStringAsync("Stickers", JsonSerializer.Serialize(stickers), _options);
         }
         else
         {
-            stickers = JsonConvert.DeserializeObject<Sticker[]>(cachedStickers);
+            stickers = JsonSerializer.Deserialize<Sticker[]>(cachedStickers);
         }
 
         return stickers;

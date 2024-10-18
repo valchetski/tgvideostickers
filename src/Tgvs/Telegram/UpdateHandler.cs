@@ -11,7 +11,7 @@ namespace Tgvs.Telegram;
 public class UpdateHandler(ITelegramBotClient botClient, IStickersService stickersService, ILogger<UpdateHandler> logger)
     : IUpdateHandler
 {
-    public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cancellationToken)
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         var handler = update switch
         {

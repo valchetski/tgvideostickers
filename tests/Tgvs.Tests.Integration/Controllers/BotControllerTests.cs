@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using System.Text;
+using System.Text.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InlineQueryResults;
@@ -42,7 +42,7 @@ public class BotControllerTests
             var stickersDbContext = scope.ServiceProvider.GetRequiredService<StickersDbContext>();
             await stickersDbContext.Database.MigrateAsync();
             stickersDbContext.Add(new StickerEntity() { Title = "test", VideoFileId = "testvideo" });
-            stickersDbContext.SaveChanges();
+            await stickersDbContext.SaveChangesAsync();
             stickers = [.. stickersDbContext.Stickers];
         }
 
@@ -59,7 +59,7 @@ public class BotControllerTests
                 Offset = string.Empty,
             }
         };
-        var stringPayload = JsonConvert.SerializeObject(update);
+        var stringPayload = JsonSerializer.Serialize(update);
         var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
 
         // act 

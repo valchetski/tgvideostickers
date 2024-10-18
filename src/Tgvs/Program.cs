@@ -12,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddHttpLogging(o => { })
     .AddTgvsSqliteCache()
-    .AddControllers()
-    .AddNewtonsoftJson();
+    .AddControllers();
     
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
@@ -47,4 +46,4 @@ app.MapGet("/", () => "Hello World!");
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
