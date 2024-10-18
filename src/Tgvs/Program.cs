@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
+using Telegram.Bot.Types;
 using Tgvs.Cache;
 using Tgvs.Providers;
 using Tgvs.Services;
@@ -11,8 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddHttpLogging(o => { })
-    .AddTgvsSqliteCache()
-    .AddControllers();
+    .AddTgvsSqliteCache();
     
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
@@ -43,7 +44,14 @@ var app = builder.Build();
 app.UseHttpLogging();
 
 app.MapGet("/", () => "Hello World!");
-
-app.MapControllers();
+app.MapPost("/bot", async (
+    [FromBody] Update update,
+    CancellationToken cancellationToken,
+    IUpdateHandler updateHandler,
+    ITelegramBotClient botClient) =>
+{
+    await updateHandler.HandleUpdateAsync(botClient, update, cancellationToken);
+    return Results.Ok();
+});
 
 await app.RunAsync();
