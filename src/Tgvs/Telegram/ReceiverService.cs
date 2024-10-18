@@ -14,7 +14,6 @@ public class ReceiverService(
 
     public void Receive(CancellationToken stoppingToken)
     {
-        // ToDo: we can inject ReceiverOptions through IOptions container
         var receiverOptions = new ReceiverOptions()
         {
             AllowedUpdates = [],

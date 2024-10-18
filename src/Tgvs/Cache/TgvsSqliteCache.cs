@@ -61,6 +61,10 @@ namespace Tgvs.Cache
             return _sqliteCache.SetAsync(key, value, options, token);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Major Code Smell",
+            "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
+            Justification = "We had to use _db field to unexpire cache on first run. More details in comments below.")]
         private void FirstTimeWarmup()
         {
             if (_firstTimeRun)
