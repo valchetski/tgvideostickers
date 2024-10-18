@@ -19,7 +19,9 @@ builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
 
 var telegramSection = builder.Configuration.GetSection("Telegram");
-builder.Services.Configure<TelegramBotConfig>(telegramSection);
+builder.Services
+    .Configure<TelegramBotConfig>(telegramSection)
+    .ConfigureTelegramBot<Microsoft.AspNetCore.Http.Json.JsonOptions>(opt => opt.SerializerOptions);
 builder.Services.AddHttpClient("telegram_bot_client")
     .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
     {

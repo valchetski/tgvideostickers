@@ -59,7 +59,7 @@ public class BotApiTests
                 Offset = string.Empty,
             }
         };
-        var stringPayload = JsonSerializer.Serialize(update);
+        var stringPayload = JsonSerializer.Serialize(update, JsonBotAPI.Options);
         var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
 
         // act 
