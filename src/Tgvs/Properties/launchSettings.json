@@ -13,7 +13,8 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__Stickers": "Data Source=127.0.0.1,1433;Initial Catalog=Stickers;User ID=sa;Password=Password_123;Trust Server Certificate=True"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7061;http://localhost:5150"

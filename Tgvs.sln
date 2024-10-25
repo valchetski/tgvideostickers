@@ -14,6 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{A4F5E897-67E8-4A0F-A806-1A7C8E15A3CD}"
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
+		.gitignore = .gitignore
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DB9981D4-085E-4C3C-9DB9-AEA440AE2A32}"

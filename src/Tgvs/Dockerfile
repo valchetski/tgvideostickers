@@ -34,4 +34,4 @@ ENTRYPOINT ["dotnet", "Tgvs.dll"]
 FROM build AS migrations
 RUN dotnet tool install --version 8.0.10 --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
-ENTRYPOINT dotnet-ef database update
+ENTRYPOINT ["dotnet-ef", "database", "update"]

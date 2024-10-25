@@ -6,8 +6,10 @@ services:
       context: .
       dockerfile: src/Tgvs/Dockerfile
       target: migrations
+    environment:
+      - ConnectionStrings__Stickers=Server=sqlserver;Initial Catalog=Stickers;User=sa;Password=Password_123;TrustServerCertificate=True
     depends_on:
-        - sqlserver
+      - sqlserver
   sqlserver:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
