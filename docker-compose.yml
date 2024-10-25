@@ -1,0 +1,7 @@
+services:
+  tgvs:
+    image: ${DOCKER_REGISTRY-}tgvs
+    build:
+      context: .
+      dockerfile: src/Tgvs/Dockerfile
+      target: final
