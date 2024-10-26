@@ -1,0 +1,16 @@
+### GET request to example server
+POST https://localhost:7061/bot
+Content-Type: application/json
+
+{
+  "inline_query": {
+    "Id": "any",
+    "From": {
+      "FirstName": ""
+    },
+    "Query": "",
+    "Offset": ""
+  }
+}
+
+###

@@ -5,13 +5,12 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InlineQueryResults;
 using Testcontainers.MsSql;
 using Tgvs.Data;
-using Tgvs.Tests.Integration.Fixtures;
+using Tgvs.Telegram;
 
 namespace Tgvs.Tests.Integration;
 
@@ -25,15 +24,9 @@ public class BotApiTests
         await container.StartAsync();
         var sqlConnectionString = container.GetConnectionString();
         Environment.SetEnvironmentVariable("ConnectionStrings__Stickers", sqlConnectionString);
+        Environment.SetEnvironmentVariable("Telegram__UseMock", "true");
 
-        var mockTelegramBotClient = new MockTelegramBotClient();
-        var factory = new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(x => x
-                .ConfigureServices(s =>
-                {
-                    s.RemoveAll<ITelegramBotClient>();
-                    s.AddSingleton<ITelegramBotClient>(mockTelegramBotClient);
-                }));
+        var factory = new WebApplicationFactory<Program>();
         var client = factory.CreateClient();
 
         var stickers = new List<StickerEntity>();
@@ -68,6 +61,9 @@ public class BotApiTests
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+        var mockTelegramBotClient = factory.Services
+            .GetRequiredService<ITelegramBotClient>().Should().BeOfType<MockTelegramBotClient>().Which;
+
         mockTelegramBotClient.AnswerInlineQueryRequests.Should().NotBeNullOrEmpty()
             .And.ContainSingle(x => x.InlineQueryId == update.InlineQuery.Id)
             .Which.Results.Should().NotBeNullOrEmpty()

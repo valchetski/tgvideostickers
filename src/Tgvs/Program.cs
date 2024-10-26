@@ -26,6 +26,12 @@ builder.Services.AddHttpClient("telegram_bot_client")
     .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
     {
         var telegramConfig = sp.GetRequiredService<IOptions<TelegramBotConfig>>().Value;
+
+        if (telegramConfig.UseMock)
+        {
+            return new MockTelegramBotClient();
+        }
+        
         TelegramBotClientOptions options = new(telegramConfig.Token);
         return new TelegramBotClient(options, httpClient);
     });

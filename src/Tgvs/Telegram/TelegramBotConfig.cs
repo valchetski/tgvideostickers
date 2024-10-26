@@ -5,4 +5,6 @@ public class TelegramBotConfig
     public required string Token { get; set; }
 
     public bool UseWebhook { get; set; }
+    
+    public bool UseMock { get; set; }
 }

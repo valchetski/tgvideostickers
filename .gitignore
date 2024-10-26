@@ -400,3 +400,6 @@ FodyWeavers.xsd
 #Tgvs custom
 stickers.json
 .DS_Store
+*.db
+*.db-shm
+*.db-wal
