@@ -20,7 +20,7 @@ public class BotApiTests
     public async Task SqlProvider()
     {
         // arrange
-        var container = new MsSqlBuilder().Build();
+        var container = new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build();
         await container.StartAsync();
         var sqlConnectionString = container.GetConnectionString();
         Environment.SetEnvironmentVariable("ConnectionStrings__Stickers", sqlConnectionString);
