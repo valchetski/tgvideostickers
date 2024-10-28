@@ -4,7 +4,10 @@ using System.Text.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InlineQueryResults;
@@ -26,17 +29,24 @@ public class BotApiTests
         Environment.SetEnvironmentVariable("ConnectionStrings__Stickers", sqlConnectionString);
         Environment.SetEnvironmentVariable("Telegram__UseMock", "true");
 
-        var factory = new WebApplicationFactory<Program>();
+        var factory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(x => x
+                .ConfigureServices(services =>
+                {
+                    services.RemoveAll<IDistributedCache>();
+                    
+                    var distributedCacheMock = new Mock<IDistributedCache>();
+                    services.AddSingleton(distributedCacheMock.Object);
+                }));
         var client = factory.CreateClient();
 
-        var stickers = new List<StickerEntity>();
+        var stickers = new List<StickerEntity> { new() { Title = "test", VideoFileId = "video" } };
         using (var scope = factory.Services.CreateScope())
         {
             var stickersDbContext = scope.ServiceProvider.GetRequiredService<StickersDbContext>();
             await stickersDbContext.Database.MigrateAsync();
-            stickersDbContext.Add(new StickerEntity() { Title = "test", VideoFileId = "testvideo" });
+            stickersDbContext.AddRange(stickers);
             await stickersDbContext.SaveChangesAsync();
-            stickers = [.. stickersDbContext.Stickers];
         }
 
         var update = new Update

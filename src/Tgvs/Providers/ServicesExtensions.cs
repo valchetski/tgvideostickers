@@ -23,14 +23,9 @@ public static class ServicesExtensions
         {
             var stickersFile = configuration.GetValue<string>("StickersFile");
             ArgumentNullException.ThrowIfNull(stickersFile);
-            if (Uri.IsWellFormedUriString(stickersFile, UriKind.Absolute))
-            {
-                return services.AddCachedStickersProvider(new RemoteStickersProvider(stickersFile));
-            }
-            else
-            {
-                return services.AddCachedStickersProvider(new FileStickersProvider(stickersFile));
-            }
+            return Uri.IsWellFormedUriString(stickersFile, UriKind.Absolute) ? 
+                services.AddCachedStickersProvider(new RemoteStickersProvider(stickersFile)) : 
+                services.AddCachedStickersProvider(new FileStickersProvider(stickersFile));
         }
     }
 

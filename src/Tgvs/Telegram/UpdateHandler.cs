@@ -8,7 +8,7 @@ using Tgvs.Services;
 
 namespace Tgvs.Telegram;
 
-public class UpdateHandler(ITelegramBotClient botClient, IStickersService stickersService, ILogger<UpdateHandler> logger)
+public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandler> logger)
     : IUpdateHandler
 {
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -21,24 +21,24 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
             // UpdateType.ShippingQuery:
             // UpdateType.PreCheckoutQuery:
             // UpdateType.Poll:
-            { Message: { } message } => BotOnMessageReceived(message, cancellationToken),
-            { EditedMessage: { } message } => BotOnMessageReceived(message, cancellationToken),
-            { CallbackQuery: { } callbackQuery } => BotOnCallbackQueryReceived(callbackQuery, cancellationToken),
-            { InlineQuery: { } inlineQuery } => BotOnInlineQueryReceived(inlineQuery, cancellationToken),
-            { ChosenInlineResult: { } chosenInlineResult } => BotOnChosenInlineResultReceived(chosenInlineResult, cancellationToken),
+            { Message: { } message } => BotOnMessageReceived(botClient, message, cancellationToken),
+            { EditedMessage: { } message } => BotOnMessageReceived(botClient, message, cancellationToken),
+            { CallbackQuery: { } callbackQuery } => BotOnCallbackQueryReceived(botClient, callbackQuery, cancellationToken),
+            { InlineQuery: { } inlineQuery } => BotOnInlineQueryReceived(botClient, inlineQuery, cancellationToken),
+            { ChosenInlineResult: { } chosenInlineResult } => BotOnChosenInlineResultReceived(botClient, chosenInlineResult, cancellationToken),
             _ => UnknownUpdateHandlerAsync(update)
         };
 
         await handler;
     }
 
-    private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
+    private async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
         logger.LogInformation("Receive message type: {MessageType}", message.Type);
 
         if (message.Video != null)
         {
-            await TextInput(message, message.Video.FileId, cancellationToken);
+            await TextInput(botClient, message, message.Video.FileId, cancellationToken);
             return;
         }
 
@@ -47,23 +47,22 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
 
         var action = messageText.Split(' ')[0] switch
         {
-            _ => TextInput(message, "Hello", cancellationToken)
+            _ => TextInput(botClient, message, "Hello", cancellationToken)
         };
         await action;
-        
-        Task<Message> TextInput(Message message, string text, CancellationToken cancellationToken)
-        {
-            return botClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: text,
-                replyMarkup: new ReplyKeyboardRemove(),
-                cancellationToken: cancellationToken);
-
-        }
+    }
+    
+    private static Task<Message> TextInput(ITelegramBotClient botClient, Message message, string text, CancellationToken cancellationToken)
+    {
+        return botClient.SendTextMessageAsync(
+            chatId: message.Chat.Id,
+            text: text,
+            replyMarkup: new ReplyKeyboardRemove(),
+            cancellationToken: cancellationToken);
     }
 
     // Process Inline Keyboard callback data
-    private async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    private async Task BotOnCallbackQueryReceived(ITelegramBotClient botClient, CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         logger.LogInformation("Received inline keyboard callback from: {CallbackQueryId}", callbackQuery.Id);
 
@@ -80,12 +79,12 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
 
     #region Inline Mode
 
-    private async Task BotOnInlineQueryReceived(InlineQuery inlineQuery, CancellationToken cancellationToken)
+    private async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery inlineQuery, CancellationToken cancellationToken)
     {
         logger.LogInformation("Received inline query from: {InlineQueryFromId}", inlineQuery.From.Id);
 
         var stickers = await stickersService.GetStickersAsync(inlineQuery.Query);
-        InlineQueryResult[] results = [];
+        InlineQueryResultCachedVideo[] results = [];
         if (stickers != null)
         {
             results = stickers
@@ -99,7 +98,7 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
             cancellationToken: cancellationToken);
     }
 
-    private async Task BotOnChosenInlineResultReceived(ChosenInlineResult chosenInlineResult, CancellationToken cancellationToken)
+    private async Task BotOnChosenInlineResultReceived(ITelegramBotClient botClient, ChosenInlineResult chosenInlineResult, CancellationToken cancellationToken)
     {
         logger.LogInformation("Received inline result: {ChosenInlineResultId}", chosenInlineResult.ResultId);
 
@@ -119,13 +118,13 @@ public class UpdateHandler(ITelegramBotClient botClient, IStickersService sticke
 
     public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, HandleErrorSource source, CancellationToken cancellationToken)
     {
-        var ErrorMessage = exception switch
+        var errorMessage = exception switch
         {
             ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString()
         };
 
-        logger.LogInformation("HandleError: {ErrorMessage}", ErrorMessage);
+        logger.LogInformation("HandleError: {ErrorMessage}", errorMessage);
 
         // Cooldown in case of network connection error
         if (exception is RequestException)

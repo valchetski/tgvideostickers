@@ -12,8 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddHttpLogging(_ => { })
-    .AddTgvsSqliteCache()
     .AddTelegramServices(builder.Configuration)
+    .AddTgvsSqliteCache()
     .AddCachedStickersProvider(builder.Configuration)
     .AddScoped<IStickersService, StickersService>()
     .AddScoped<IReceiverService, ReceiverService>()

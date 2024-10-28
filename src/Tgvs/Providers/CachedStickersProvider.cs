@@ -18,7 +18,7 @@ public class CachedStickersProvider(
     {
         var cachedStickers = await _cache.GetStringAsync("Stickers");
         Sticker[]? stickers;
-        if (cachedStickers == null)
+        if (string.IsNullOrEmpty(cachedStickers))
         {
             stickers = await _originalProvider.GetStickersAsync();
             await _cache.SetStringAsync("Stickers", JsonSerializer.Serialize(stickers), _options);

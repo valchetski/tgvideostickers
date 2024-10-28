@@ -398,6 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 #Tgvs custom
+.idea
 stickers.json
 .DS_Store
 *.db
