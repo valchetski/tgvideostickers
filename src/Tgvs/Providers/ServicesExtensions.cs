@@ -19,14 +19,12 @@ public static class ServicesExtensions
                 .AddCachedStickersProvider(sp =>
                     new SqlStickersProvider(sp.GetRequiredService<StickersDbContext>()));
         }
-        else
-        {
-            var stickersFile = configuration.GetValue<string>("StickersFile");
-            ArgumentNullException.ThrowIfNull(stickersFile);
-            return Uri.IsWellFormedUriString(stickersFile, UriKind.Absolute) ? 
-                services.AddCachedStickersProvider(new RemoteStickersProvider(stickersFile)) : 
-                services.AddCachedStickersProvider(new FileStickersProvider(stickersFile));
-        }
+
+        var stickersFile = configuration.GetValue<string>("StickersFile");
+        ArgumentNullException.ThrowIfNull(stickersFile);
+        return Uri.IsWellFormedUriString(stickersFile, UriKind.Absolute) ? 
+            services.AddCachedStickersProvider(new RemoteStickersProvider(stickersFile)) : 
+            services.AddCachedStickersProvider(new FileStickersProvider(stickersFile));
     }
 
     private static IServiceCollection AddCachedStickersProvider<TProvider>(

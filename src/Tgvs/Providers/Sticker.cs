@@ -2,9 +2,9 @@
 
 public class Sticker
 {
-    public required string Id { get; set; }
+    public required string Id { get; init; }
 
-    public required string VideoFileId { get; set; }
+    public required string VideoFileId { get; init; }
 
-    public required string Title { get; set; }
+    public required string Title { get; init; }
 }

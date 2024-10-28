@@ -8,22 +8,18 @@ public class ReceiverService(
     IUpdateHandler updateHandler,
     ILogger<ReceiverService> logger) : IReceiverService
 {
-    private readonly ITelegramBotClient _botClient = botClient;
-    private readonly IUpdateHandler _updateHandler = updateHandler;
-    private readonly ILogger<ReceiverService> _logger = logger;
-
     public void Receive(CancellationToken stoppingToken)
     {
-        var receiverOptions = new ReceiverOptions()
+        var receiverOptions = new ReceiverOptions
         {
             AllowedUpdates = [],
             DropPendingUpdates = true,
         };
 
-        _logger.LogInformation("Start receiving updates");
+        logger.LogInformation("Start receiving updates");
 
-        _botClient.StartReceiving(
-            updateHandler: _updateHandler,
+        botClient.StartReceiving(
+            updateHandler: updateHandler,
             receiverOptions: receiverOptions,
             cancellationToken: stoppingToken);
     }

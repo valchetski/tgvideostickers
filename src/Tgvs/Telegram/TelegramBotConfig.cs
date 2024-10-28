@@ -2,9 +2,9 @@
 
 public class TelegramBotConfig
 {
-    public required string Token { get; set; }
+    public required string Token { get; init; }
 
-    public bool UseWebhook { get; set; }
+    public bool UseWebhook { get; init; }
     
-    public bool UseMock { get; set; }
+    public bool UseMock { get; init; }
 }

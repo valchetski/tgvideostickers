@@ -13,11 +13,8 @@ public class StickersService(IStickersProvider stickersProvider) : IStickersServ
             return null;
         }
 
-        if (string.IsNullOrEmpty(name))
-        {
-            return stickers;
-        }
-
-        return stickers.Where(x => x.Title.Contains(name, StringComparison.OrdinalIgnoreCase)).ToArray();
+        return string.IsNullOrEmpty(name) 
+            ? stickers 
+            : stickers.Where(x => x.Title.Contains(name, StringComparison.OrdinalIgnoreCase)).ToArray();
     }
 }

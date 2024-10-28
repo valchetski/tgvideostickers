@@ -10,18 +10,16 @@ public class CachedStickersProvider(
     IOptions<DistributedCacheEntryOptions> options)
      : IStickersProvider
 {
-    private readonly IStickersProvider _originalProvider = originalProvider;
-    private readonly IDistributedCache _cache = cache;
     private readonly DistributedCacheEntryOptions _options = options.Value;
 
     public async Task<Sticker[]?> GetStickersAsync()
     {
-        var cachedStickers = await _cache.GetStringAsync("Stickers");
+        var cachedStickers = await cache.GetStringAsync("Stickers");
         Sticker[]? stickers;
         if (string.IsNullOrEmpty(cachedStickers))
         {
-            stickers = await _originalProvider.GetStickersAsync();
-            await _cache.SetStringAsync("Stickers", JsonSerializer.Serialize(stickers), _options);
+            stickers = await originalProvider.GetStickersAsync();
+            await cache.SetStringAsync("Stickers", JsonSerializer.Serialize(stickers), _options);
         }
         else
         {

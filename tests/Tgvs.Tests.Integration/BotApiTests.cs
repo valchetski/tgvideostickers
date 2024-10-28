@@ -54,13 +54,13 @@ public class BotApiTests
             InlineQuery = new InlineQuery
             {
                 Id = "any",
-                From = new User()
+                From = new User
                 {
                     FirstName = string.Empty,
                 },
                 Query = string.Empty,
                 Offset = string.Empty,
-            }
+            },
         };
         var stringPayload = JsonSerializer.Serialize(update, JsonBotAPI.Options);
         var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");

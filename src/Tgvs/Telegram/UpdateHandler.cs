@@ -26,7 +26,7 @@ public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandl
             { CallbackQuery: { } callbackQuery } => BotOnCallbackQueryReceived(botClient, callbackQuery, cancellationToken),
             { InlineQuery: { } inlineQuery } => BotOnInlineQueryReceived(botClient, inlineQuery, cancellationToken),
             { ChosenInlineResult: { } chosenInlineResult } => BotOnChosenInlineResultReceived(botClient, chosenInlineResult, cancellationToken),
-            _ => UnknownUpdateHandlerAsync(update)
+            _ => UnknownUpdateHandlerAsync(update),
         };
 
         await handler;
@@ -47,7 +47,7 @@ public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandl
 
         var action = messageText.Split(' ')[0] switch
         {
-            _ => TextInput(botClient, message, "Hello", cancellationToken)
+            _ => TextInput(botClient, message, "Hello", cancellationToken),
         };
         await action;
     }
@@ -121,7 +121,7 @@ public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandl
         var errorMessage = exception switch
         {
             ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-            _ => exception.ToString()
+            _ => exception.ToString(),
         };
 
         logger.LogInformation("HandleError: {ErrorMessage}", errorMessage);

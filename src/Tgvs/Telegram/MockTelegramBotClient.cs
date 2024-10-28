@@ -8,7 +8,7 @@ namespace Tgvs.Telegram;
 
 public class MockTelegramBotClient : ITelegramBotClient
 {
-    public List<AnswerInlineQueryRequest> AnswerInlineQueryRequests { get; set; } = [];
+    public List<AnswerInlineQueryRequest> AnswerInlineQueryRequests { get; } = [];
 
     public bool LocalBotServer => throw new NotImplementedException();
 
