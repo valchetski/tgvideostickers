@@ -8,6 +8,7 @@ services:
       target: migrations
     environment:
       - ConnectionStrings__Stickers=Server=sqlserver;Initial Catalog=Stickers;User=sa;Password=Password_123;TrustServerCertificate=True
+      - Telegram__UseMock=true
     depends_on:
       - sqlserver
   sqlserver:

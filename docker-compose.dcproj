@@ -11,14 +11,12 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.migrations.ps1" />
+    <None Include="docker-compose.migrations.sh" />
     <None Include="docker-compose.migrations.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="docker-compose.migrations.sh" />
   </ItemGroup>
 </Project>

@@ -9,12 +9,8 @@ public static class ServicesExtensions
     {
         services
             .ConfigureTelegramBot<JsonOptions>(opt => opt.SerializerOptions);
-        var telegramConfig = configuration.GetSection("Telegram").Get<TelegramBotConfig>();
-        if (telegramConfig == null)
-        {
-            throw new InvalidOperationException("Missing Telegram configuration.");
-        }
-        
+        var telegramConfig = configuration.GetSection("Telegram").Get<TelegramBotConfig>() 
+            ?? throw new InvalidOperationException("Missing Telegram configuration.");
         var httpClientBuilder = services.AddHttpClient("telegram_bot_client");
         if (telegramConfig.UseMock)
         {
