@@ -9,22 +9,23 @@ public static class ServicesExtensions
     {
         services
             .ConfigureTelegramBot<JsonOptions>(opt => opt.SerializerOptions);
-        var telegramConfig = configuration.GetSection("Telegram").Get<TelegramBotConfig>() 
-            ?? throw new InvalidOperationException("Missing Telegram configuration.");
+        var telegramSection = configuration.GetSection("Telegram");
+
         var httpClientBuilder = services.AddHttpClient("telegram_bot_client");
-        if (telegramConfig.UseMock)
+        if (telegramSection.GetValue<bool>("UseMock"))
         {
             var telegramBotClient = new MockTelegramBotClient();
             httpClientBuilder.AddTypedClient<ITelegramBotClient>((_, _) => telegramBotClient);
         }
         else
         {
-            TelegramBotClientOptions options = new(telegramConfig.Token);
+            var token = telegramSection.GetValue<string>("Token") ?? throw new InvalidOperationException("Telegram Token is not set.");
+            TelegramBotClientOptions options = new(token);
             httpClientBuilder
                 .AddTypedClient<ITelegramBotClient>((httpClient) => new TelegramBotClient(options, httpClient));
         }   
         
-        if (!telegramConfig.UseWebhook)
+        if (!telegramSection.GetValue<bool>("UseWebhook"))
         {
             services.AddHostedService<PollingService>();
         }
