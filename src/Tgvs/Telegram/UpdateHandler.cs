@@ -15,17 +15,9 @@ public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandl
     {
         var handler = update switch
         {
-            // UpdateType.Unknown:
-            // UpdateType.ChannelPost:
-            // UpdateType.EditedChannelPost:
-            // UpdateType.ShippingQuery:
-            // UpdateType.PreCheckoutQuery:
-            // UpdateType.Poll:
             { Message: { } message } => BotOnMessageReceived(botClient, message, cancellationToken),
             { EditedMessage: { } message } => BotOnMessageReceived(botClient, message, cancellationToken),
-            { CallbackQuery: { } callbackQuery } => BotOnCallbackQueryReceived(botClient, callbackQuery, cancellationToken),
             { InlineQuery: { } inlineQuery } => BotOnInlineQueryReceived(botClient, inlineQuery, cancellationToken),
-            { ChosenInlineResult: { } chosenInlineResult } => BotOnChosenInlineResultReceived(botClient, chosenInlineResult, cancellationToken),
             _ => UnknownUpdateHandlerAsync(update),
         };
 
@@ -60,25 +52,7 @@ public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandl
             replyMarkup: new ReplyKeyboardRemove(),
             cancellationToken: cancellationToken);
     }
-
-    // Process Inline Keyboard callback data
-    private async Task BotOnCallbackQueryReceived(ITelegramBotClient botClient, CallbackQuery callbackQuery, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Received inline keyboard callback from: {CallbackQueryId}", callbackQuery.Id);
-
-        await botClient.AnswerCallbackQueryAsync(
-            callbackQueryId: callbackQuery.Id,
-            text: $"Received {callbackQuery.Data}",
-            cancellationToken: cancellationToken);
-
-        await botClient.SendTextMessageAsync(
-            chatId: callbackQuery.Message!.Chat.Id,
-            text: $"Received {callbackQuery.Data}",
-            cancellationToken: cancellationToken);
-    }
-
-    #region Inline Mode
-
+    
     private async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery inlineQuery, CancellationToken cancellationToken)
     {
         logger.LogInformation("Received inline query from: {InlineQueryFromId}", inlineQuery.From.Id);
@@ -95,20 +69,9 @@ public class UpdateHandler(IStickersService stickersService, ILogger<UpdateHandl
         await botClient.AnswerInlineQueryAsync(
             inlineQueryId: inlineQuery.Id,
             results: results,
+            cacheTime: 600,
             cancellationToken: cancellationToken);
     }
-
-    private async Task BotOnChosenInlineResultReceived(ITelegramBotClient botClient, ChosenInlineResult chosenInlineResult, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Received inline result: {ChosenInlineResultId}", chosenInlineResult.ResultId);
-
-        await botClient.SendTextMessageAsync(
-            chatId: chosenInlineResult.From.Id,
-            text: $"You chose result with Id: {chosenInlineResult.ResultId}",
-            cancellationToken: cancellationToken);
-    }
-
-    #endregion
 
     private Task UnknownUpdateHandlerAsync(Update update)
     {
